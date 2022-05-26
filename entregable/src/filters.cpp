@@ -74,4 +74,27 @@ void contrast(ppm& img, float contrast)
 			
 	}
 }
+void frame(ppm& img, int x)
+{
+	int fAnteultimas = img.width - x;
+	int cAnteultimas = img.height - x;
+
+	for(int i = 0; i < img.height; i++)//columna
+	{
+		for(int j = 0; j < img.width; j++)//fila
+		{	
+			if(j<=x or j >= fAnteultimas ) //agarra las primeras x filas y las ultimas x filas
+			{
+				img.setPixel(i,j,pixel(0,0,0));
+			}
+
+			if(i<=x or i >= cAnteultimas ) //agarra las primeras x columnas y las ultimas x columnas
+			{
+				img.setPixel(i,j,pixel(0,0,0));
+			}
+		}
+					
+			
+	}
+}
 

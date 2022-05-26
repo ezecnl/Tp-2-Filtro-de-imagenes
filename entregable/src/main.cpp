@@ -44,6 +44,10 @@ int main(int argc , char* argv[]){
 		blackWhite(img);
 	else if(filter == "contrast")
 		contrast(img,(unsigned char)p1);
+	else if (filter == "frame")
+		frame(img,(unsigned char)p1);
+		
+	
    	clock_gettime(CLOCK_REALTIME, &stop);
 
 	double accum;
