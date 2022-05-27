@@ -83,7 +83,7 @@ void frame(ppm& img, int x)
 	{
 		for(int j = 0; j < img.width; j++)//fila
 		{	
-			if(j<=x or j >= fAnteultimas ) //agarra las primeras x filas y las ultimas x filas
+			if(j<=x or  j >= fAnteultimas ) //agarra las primeras x filas y las ultimas x filas
 			{
 				img.setPixel(i,j,pixel(0,0,0));
 			}
@@ -96,5 +96,42 @@ void frame(ppm& img, int x)
 					
 			
 	}
+}
+void merge(ppm& img1, ppm& img2, float p1)
+{
+	
+	float p2 = 1- p1;
+
+	for(int i = 0; i < img1.height; i++)//columna
+	{
+		for(int j = 0; j < img1.width; j++)//fila
+		{	
+			for(int i2 = 0; i2 < img2.height; i2++)//inecesaria
+			{
+				for(int j2 = 0; j2 < img2.width; j2++)//inecesaria
+				{	
+					int R1 =img1.getPixel(i,j).r;
+					int G1 =img1.getPixel(i,j).g;
+					int B1 =img1.getPixel(i,j).b;
+					
+					int R2 =img2.getPixel(i2,j2).r;
+					int G2 =img2.getPixel(i2,j2).g;
+					int B2 =img2.getPixel(i2,j2).g;
+
+					int rFinal = R1*p1 + R2*p2;
+					int gFinal = G1*p1 + G2*p2;
+					int bFinal = B1*p1 + B2*p2;
+					
+					img2.setPixel(i2,j2, pixel(rFinal,gFinal,bFinal));
+
+				}
+					
+			
+			}	
+		}
+					
+			
+	}
+
 }
 
