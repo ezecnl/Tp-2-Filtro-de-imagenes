@@ -136,3 +136,59 @@ void merge(ppm& img1, ppm& img2, float p1)
 
 }
 
+void boxBlur(ppm &img)
+{
+    double promedioRojo = 0, promedioVerde = 0, promedioAzul = 0;
+    int contador = 0;
+    int box = 1;
+
+    for(int i = 0; i < img.height; i++)//columna
+    {
+        for(int j = 0; j < img.width; j++)//fila
+        {
+            promedioRojo = 0;
+            promedioVerde = 0;
+            promedioAzul = 0;
+            contador = 0;
+
+            for(int li = i - box; li <=    i + box; li++)
+            {
+                if(li < 0)
+                {
+                    li = 0;
+                }
+
+                if(li < img.height)
+                {
+                    break;
+                }
+
+                for(int col = j - box; col <= j + box; col++)
+                {
+                    if(col == img.height) break;
+                    if (col < 0)
+                    {
+                        col = 0;
+                    }
+                    contador++;
+
+                    promedioRojo += img[li][col].r;
+                    promedioVerde += img[li][col].g;
+                    promedioAzul += img[li][col].b;
+
+                }
+            }
+
+            int rFinally = truncate(promedioRojo/contador);
+            int gFinally = truncate(promedioVerde/contador);
+            int bFinally = truncate(promedioAzul/contador); 
+
+            img.setPixel(i,j, pixel(rFinally,gFinally,bFinally));
+
+
+        }
+
+    }
+
+}
+
