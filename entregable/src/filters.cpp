@@ -102,7 +102,7 @@ void frame(ppm& img, int x)
 
 void merge(ppm& img1, ppm& img2, float p1)
 {
-	
+	//Asumimos que las imagenes deben ser del mismo tamaño.
 	float p2 = 1 - p1;
 
 	for(int i = 0; i < img1.height; i++)//columna
@@ -122,8 +122,12 @@ void merge(ppm& img1, ppm& img2, float p1)
 			int rFinal = R1*p1 + R2*p2;
 			int gFinal = G1*p1 + G2*p2;
 			int bFinal = B1*p1 + B2*p2;
+
+			truncate(rFinal);
+			truncate(gFinal);
+			truncate(bFinal);
 			
-			img2.setPixel(i,j, pixel(rFinal,gFinal,bFinal));
+			img1.setPixel(i,j, pixel(rFinal,gFinal,bFinal));
 		}
 				
 					
@@ -151,39 +155,45 @@ void boxBlur(ppm &img)
             promedioAzul = 0;
             contador = 0;
 
-            for(int li = i - box; li <=    i + box; li++)
+            for(int li = i - box; li <=    i + box; li++) //Creo la caja 
             {
                 if(li < 0)
                 {
                     li = 0;
                 }
 
-                if(li < img.height)
+                if(li == img.height)
                 {
                     break;
                 }
 
                 for(int col = j - box; col <= j + box; col++)
                 {
-                    if(col == img.height) break;
+                    if(col == img.width) break;
                     if (col < 0)
                     {
                         col = 0;
                     }
                     contador++;
 
-                    promedioRojo += img[li][col].r;
-                    promedioVerde += img[li][col].g;
-                    promedioAzul += img[li][col].b;
+                    promedioRojo = promedioRojo + img.getPixel(li,col).r;
+                    promedioVerde = promedioVerde + img.getPixel(li,col).g;
+                    promedioAzul = promedioAzul + img.getPixel(li,col).b;
+
+					
 
                 }
             }
 
-            int rFinally = truncate(promedioRojo/contador);
-            int gFinally = truncate(promedioVerde/contador);
-            int bFinally = truncate(promedioAzul/contador); 
+            int rFinally = promedioRojo/contador;
+			int gFinally = promedioVerde/contador;
+			int bFinally = promedioAzul/contador; 
 
-            img.setPixel(i,j, pixel(rFinally,gFinally,bFinally));
+			truncate(rFinally);
+			truncate(gFinally);
+			truncate(bFinally);
+
+			img.setPixel(i,j, pixel(rFinally,gFinally,bFinally));
 
 
         }

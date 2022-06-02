@@ -30,11 +30,10 @@ int main(int argc , char* argv[]){
 	unsigned int n = atoi(argv[2]);
 	float p1 = atof(argv[3]);
 	string img1(argv[4]);
-	string img2(argv[6]);
 	string out = string(argv[5]);
 	
 	ppm img(img1);
-	ppm img3(img2);
+	
 	
 	cout << "Aplicando filtros"<< endl;
 	struct timespec start, stop;    	
@@ -49,7 +48,14 @@ int main(int argc , char* argv[]){
 	else if (filter == "frame")
 		frame(img,(unsigned char)p1);
 	else if (filter == "merge")
+	{
+		string img2(argv[6]);
+		ppm img3(img2);
 		merge(img,img3,p1);
+	}
+	else if (filter == "boxBlur")
+		boxBlur(img);
+		
 		
 		
 	
