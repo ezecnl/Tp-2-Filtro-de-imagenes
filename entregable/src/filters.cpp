@@ -202,3 +202,28 @@ void boxBlur(ppm &img)
 
 }
 
+
+void zoom(ppm &img_out, ppm &img, int n)
+{
+
+	for(int i = 0; i < img.height / n; i++)//columna
+	{
+		for(int j = 0; j < img.width / n; j++)//fila
+		{	
+			int r1 =img.getPixel(i,j).r;
+			int g1 =img.getPixel(i,j).g;
+			int b1 =img.getPixel(i,j).b;
+
+
+			for(int k = 0; k < n; k++)
+			{	
+				for(int h = 0; h < n; h++)
+				{				
+					img_out.setPixel(i * n + k, j * n + h, pixel(r1, g1, b1));
+				}
+
+			}
+		}		
+	}
+
+}

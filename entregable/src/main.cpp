@@ -9,8 +9,8 @@
 #include <fstream>      // std::ofstream
 #include "ppm.h"
 
-#define ONE_OVER_BILLION 1E-9
 
+#define ONE_OVER_BILLION 1E-9
 
 using namespace std;
 
@@ -55,10 +55,13 @@ int main(int argc , char* argv[]){
 	}
 	else if (filter == "boxBlur")
 		boxBlur(img);
+	else if (filter == "zoom")
+	{
+		ppm img_orig(img1);
+		zoom(img,img_orig,p1);
+	}
 		
 		
-		
-	
    	clock_gettime(CLOCK_REALTIME, &stop);
 
 	double accum;
