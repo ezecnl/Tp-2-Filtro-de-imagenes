@@ -53,7 +53,10 @@ int main(int argc , char* argv[]){
 		else
 			contrastMultiThread(img, n);
 	else if (filter == "frame")
-		frame(img,(unsigned char)p1);
+		if (single_thread)
+			frame(img,(unsigned char)p1, 0, img.height);
+		else
+			frameMultiThread(img, n);
 	else if (filter == "merge")
 	{
 		string img2(argv[6]);

@@ -77,12 +77,12 @@ void contrast(ppm& img, float contrast, int start, int end )
 	}
 }
 
-void frame(ppm& img, int x)
+void frame(ppm& img, int x, int start, int end)
 {
 	int fAnteultimas = img.width - x;
 	int cAnteultimas = img.height - x;
 
-	for(int i = 0; i < img.height; i++)//columna
+	for(int i = start; i < end; i++)//columna
 	{
 		for(int j = 0; j < img.width; j++)//fila
 		{	
@@ -284,6 +284,27 @@ void boxBlurMultiThread(ppm& img, int n_threads)
 		int end = (i + 1) * rows_for_thread;
 
 		threads_result.push_back(thread(boxBlur, ref(img), start, end));
+	}
+
+	for (int i = 0; i < n_threads; i++)
+	{
+        threads_result[i].join();
+	}
+}
+
+void frameMultiThread(ppm& img, int n_threads)
+{
+
+	int rows_for_thread = (int)(img.height / n_threads);
+	vector<thread> threads_result;
+
+	for (int i = 0; i < n_threads; i++)
+	{
+		// Calculo el principio y el final
+		int start = i * rows_for_thread;
+		int end = (i + 1) * rows_for_thread;
+
+		threads_result.push_back(thread(frame, ref(img), start, end));
 	}
 
 	for (int i = 0; i < n_threads; i++)
