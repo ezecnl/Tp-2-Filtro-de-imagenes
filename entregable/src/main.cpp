@@ -28,6 +28,7 @@ int main(int argc , char* argv[]){
 	
 	string filter = string(argv[1]);
 	unsigned int n = atoi(argv[2]);
+	bool single_thread = n == 1;
 	float p1 = atof(argv[3]);
 	string img1(argv[4]);
 	string out = string(argv[5]);
@@ -42,9 +43,15 @@ int main(int argc , char* argv[]){
 	if (filter == "plain")
 		plain(img, (unsigned char)p1);
 	else if(filter == "blackWhite")
-		blackWhite(img);
+		if (single_thread)
+			blackWhite(img, 0, img.height);
+		else
+			blackWhiteMultiThread(img, n);
 	else if(filter == "contrast")
-		contrast(img,(unsigned char)p1);
+		if (single_thread)
+			contrast(img,(unsigned char)p1, 0, img.height);
+		else
+			contrastMultiThread(img, n);
 	else if (filter == "frame")
 		frame(img,(unsigned char)p1);
 	else if (filter == "merge")
@@ -54,7 +61,10 @@ int main(int argc , char* argv[]){
 		merge(img,img3,p1);
 	}
 	else if (filter == "boxBlur")
-		boxBlur(img);
+		if (single_thread)
+			boxBlur(img, 0, img.height);
+		else
+			boxBlurMultiThread(img, n);
 	else if (filter == "zoom")
 	{
 		ppm img_orig(img1);

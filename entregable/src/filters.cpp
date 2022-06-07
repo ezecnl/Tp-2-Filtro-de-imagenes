@@ -13,6 +13,7 @@
 
 using namespace std;
 
+
 // COMPLETAR :)
 
 // Filtro plano como ejemplo
@@ -33,10 +34,10 @@ void plain(ppm& img, unsigned char c)
 
 }
 
-void blackWhite(ppm& img)
+void blackWhite(ppm& img, int start, int end)
 {
 	
-	for(int i = 0; i < img.height; i++)
+	for(int i = start; i < end; i++)
 	{
 		for(int j = 0; j < img.width; j++)
 		{
@@ -54,10 +55,10 @@ void blackWhite(ppm& img)
 	}	
 }
 
-void contrast(ppm& img, float contrast)
+void contrast(ppm& img, float contrast, int start, int end )
 {
 	
-	for(int i = 0; i < img.height; i++)
+	for(int i = start; i < end; i++)
 	{
 		for(int j = 0; j < img.width; j++)
 		{	
@@ -65,11 +66,11 @@ void contrast(ppm& img, float contrast)
 			int r   = ((x * (img.getPixel(i,j).r - 128)) + 128);
 			int g = ((x * (img.getPixel(i,j).g - 128)) + 128);
 			int b  = ((x * (img.getPixel(i,j).b - 128)) + 128);
+
 			truncate(r);
 			truncate(g);
 			truncate(b);
 			
-
 			img.setPixel(i,j,pixel(r,g,b));
 		}			
 			
@@ -140,13 +141,13 @@ void merge(ppm& img1, ppm& img2, float p1)
 
 }
 
-void boxBlur(ppm &img)
+void boxBlur(ppm &img, int start, int end)
 {
     double promedioRojo = 0, promedioVerde = 0, promedioAzul = 0;
     int contador = 0;
     int box = 1;
 
-    for(int i = 0; i < img.height; i++)//columna
+    for(int i = start; i < end; i++)//columna
     {
         for(int j = 0; j < img.width; j++)//fila
         {
@@ -205,7 +206,7 @@ void boxBlur(ppm &img)
 
 void zoom(ppm &img_out, ppm &img, int n)
 {
-
+	//Recorro la foto original y saco los pixeles
 	for(int i = 0; i < img.height / n; i++)//columna
 	{
 		for(int j = 0; j < img.width / n; j++)//fila
@@ -214,7 +215,7 @@ void zoom(ppm &img_out, ppm &img, int n)
 			int g1 =img.getPixel(i,j).g;
 			int b1 =img.getPixel(i,j).b;
 
-
+			//Recorro la nueva foto img_out y le aplico el zoom
 			for(int k = 0; k < n; k++)
 			{	
 				for(int h = 0; h < n; h++)
@@ -226,4 +227,67 @@ void zoom(ppm &img_out, ppm &img, int n)
 		}		
 	}
 
+}
+
+void blackWhiteMultiThread(ppm& img, int n_threads)
+{
+
+	int rows_for_thread = (int)(img.height / n_threads);
+	vector<thread> threads_result;
+
+	for (int i = 0; i < n_threads; i++)
+	{
+		// Calculo el principio y el final
+		int start = i * rows_for_thread;
+		int end = (i + 1) * rows_for_thread;
+
+		threads_result.push_back(thread(blackWhite, ref(img), start, end));
+	}
+
+	for (int i = 0; i < n_threads; i++)
+	{
+        threads_result[i].join();
+	}
+}
+
+void contrastMultiThread(ppm& img, int n_threads)
+{
+
+	int rows_for_thread = (int)(img.height / n_threads);
+	vector<thread> threads_result;
+
+	for (int i = 0; i < n_threads; i++)
+	{
+		// Calculo el principio y el final
+		int start = i * rows_for_thread;
+		int end = (i + 1) * rows_for_thread;
+
+		threads_result.push_back(thread(contrast, ref(img), start, end));
+	}
+
+	for (int i = 0; i < n_threads; i++)
+	{
+        threads_result[i].join();
+	}
+}
+
+void boxBlurMultiThread(ppm& img, int n_threads)
+{
+
+	int rows_for_thread = (int)(img.height / n_threads);
+	vector<thread> threads_result;
+
+	for (int i = 0; i < n_threads; i++)
+	{
+		// Calculo el principio y el final
+		int start = i * rows_for_thread;
+		int end = (i + 1) * rows_for_thread;
+
+		threads_result.push_back(thread(boxBlur, ref(img), start, end));
+	}
+
+	for (int i = 0; i < n_threads; i++)
+	{
+        threads_result[i].join();
+	}
 }
