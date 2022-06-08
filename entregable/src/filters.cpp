@@ -97,6 +97,7 @@ void zoom(ppm &img_out, ppm &img, int n)
 
 }
 
+
 void blackWhite(ppm& img, int start, int end)
 {
 	
@@ -264,6 +265,7 @@ void boxBlurMultiThread(ppm& img, int n_threads)
         threads_result[i].join();
 	}
 }
+
 
 void frame(ppm& img, int x, int start, int end)
 {
