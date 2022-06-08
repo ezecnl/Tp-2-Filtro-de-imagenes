@@ -51,12 +51,12 @@ int main(int argc , char* argv[]){
 		if (single_thread)
 			contrast(img,(unsigned char)p1, 0, img.height);
 		else
-			contrastMultiThread(img, n);
+			contrastMultiThread(img, n, (unsigned char)p1);
 	else if (filter == "frame")
 		if (single_thread)
 			frame(img,(unsigned char)p1, 0, img.height);
 		else
-			frameMultiThread(img, n);
+			frameMultiThread(img, n, (unsigned char)p1);
 	else if (filter == "merge")
 	{
 		string img2(argv[6]);

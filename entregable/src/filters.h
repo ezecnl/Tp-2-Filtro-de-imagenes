@@ -25,8 +25,8 @@ void plain(ppm &img, unsigned char c);
 // MULTI-THREAD FILTERS
 
 void blackWhiteMultiThread(ppm& img, int n_threads);
-void contrastMultiThread(ppm& img, int n_threads);
+void contrastMultiThread(ppm& img, int n_threads, float contrast);
 void boxBlurMultiThread(ppm& img, int n_threads);
-void frameMultiThread(ppm& img, int n_threads);
+void frameMultiThread(ppm& img, int n_threads, int x);
 
 #endif

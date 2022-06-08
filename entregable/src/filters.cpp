@@ -7,8 +7,6 @@
 #include <thread>  
 #include <atomic>
 
-  
-
 #define BLACK 0
 
 using namespace std;
@@ -32,73 +30,6 @@ void plain(ppm& img, unsigned char c)
 		for(int j = 0; j < img.width; j++)			
 			img.setPixel(i, j, pixel(c,c,c));
 
-}
-
-void blackWhite(ppm& img, int start, int end)
-{
-	
-	for(int i = start; i < end; i++)
-	{
-		for(int j = 0; j < img.width; j++)
-		{
-			int r = img.getPixel(i,j).r;
-			int g = img.getPixel(i,j).g;
-			int b = img.getPixel(i,j).b;
-			int rgb = (r + g + b)/3;
-			if(rgb > 255)
-			{
-				rgb = 255;
-			}
-			img.setPixel(i, j, pixel(rgb,rgb,rgb));
-		}			
-			
-	}	
-}
-
-void contrast(ppm& img, float contrast, int start, int end )
-{
-	
-	for(int i = start; i < end; i++)
-	{
-		for(int j = 0; j < img.width; j++)
-		{	
-			float x = (259.0 * (contrast + 255.0)) / (255.0 * (259.0 - contrast));
-			int r   = ((x * (img.getPixel(i,j).r - 128)) + 128);
-			int g = ((x * (img.getPixel(i,j).g - 128)) + 128);
-			int b  = ((x * (img.getPixel(i,j).b - 128)) + 128);
-
-			truncate(r);
-			truncate(g);
-			truncate(b);
-			
-			img.setPixel(i,j,pixel(r,g,b));
-		}			
-			
-	}
-}
-
-void frame(ppm& img, int x, int start, int end)
-{
-	int fAnteultimas = img.width - x;
-	int cAnteultimas = img.height - x;
-
-	for(int i = start; i < end; i++)//columna
-	{
-		for(int j = 0; j < img.width; j++)//fila
-		{	
-			if(j<=x || j >= fAnteultimas ) //agarra las primeras x filas y las ultimas x filas
-			{
-				img.setPixel(i,j,pixel(0,0,0));
-			}
-
-			if(i<=x || i >= cAnteultimas ) //agarra las primeras x columnas y las ultimas x columnas
-			{
-				img.setPixel(i,j,pixel(0,0,0));
-			}
-		}
-					
-			
-	}
 }
 
 void merge(ppm& img1, ppm& img2, float p1)
@@ -139,6 +70,116 @@ void merge(ppm& img1, ppm& img2, float p1)
 			
 	}
 
+}
+
+void zoom(ppm &img_out, ppm &img, int n)
+{
+	//Recorro la foto original y saco los pixeles
+	for(int i = 0; i < img.height / n; i++)//columna
+	{
+		for(int j = 0; j < img.width / n; j++)//fila
+		{	
+			int r1 =img.getPixel(i,j).r;
+			int g1 =img.getPixel(i,j).g;
+			int b1 =img.getPixel(i,j).b;
+
+			//Recorro la nueva foto img_out y le aplico el zoom
+			for(int k = 0; k < n; k++)
+			{	
+				for(int h = 0; h < n; h++)
+				{				
+					img_out.setPixel(i * n + k, j * n + h, pixel(r1, g1, b1));
+				}
+
+			}
+		}		
+	}
+
+}
+
+void blackWhite(ppm& img, int start, int end)
+{
+	
+	for(int i = start; i < end; i++)
+	{
+		for(int j = 0; j < img.width; j++)
+		{
+			int r = img.getPixel(i,j).r;
+			int g = img.getPixel(i,j).g;
+			int b = img.getPixel(i,j).b;
+			int rgb = (r + g + b)/3;
+			if(rgb > 255)
+			{
+				rgb = 255;
+			}
+			img.setPixel(i, j, pixel(rgb,rgb,rgb));
+		}			
+			
+	}	
+}
+
+void blackWhiteMultiThread(ppm& img, int n_threads)
+{
+
+	int rows_for_thread = (int)(img.height / n_threads);
+	vector<thread> threads_result;
+
+	for (int i = 0; i < n_threads; i++)
+	{
+		// Calculo el principio y el final
+		int start = i * rows_for_thread;
+		int end = (i + 1) * rows_for_thread;
+
+		threads_result.push_back(thread(blackWhite, ref(img), start, end));
+	}
+
+	for (int i = 0; i < n_threads; i++)
+	{
+        threads_result[i].join();
+	}
+}
+
+void contrast(ppm& img, float contrast, int start, int end )
+{
+	
+	for(int i = start; i < end; i++)
+	{
+		for(int j = 0; j < img.width; j++)
+		{	
+			float x = (259.0 * (contrast + 255.0)) / (255.0 * (259.0 - contrast));
+			int r   = ((x * (img.getPixel(i,j).r - 128)) + 128);
+			int g = ((x * (img.getPixel(i,j).g - 128)) + 128);
+			int b  = ((x * (img.getPixel(i,j).b - 128)) + 128);
+
+			truncate(r);
+			truncate(g);
+			truncate(b);
+			
+			img.setPixel(i,j,pixel(r,g,b));
+		}			
+			
+	}
+}
+
+void contrastMultiThread(ppm& img, int n_threads, float contrasts)
+{
+
+	int rows_for_thread = (int)(img.height / n_threads);
+	vector<thread> threads_result;
+
+	for (int i = 0; i < n_threads; i++)
+	{
+		// Calculo el principio y el final
+		int start = i * rows_for_thread;
+		int end = (i + 1) * rows_for_thread;
+
+		threads_result.push_back(thread(contrast, ref(img), contrasts, start, end));
+	}
+
+	for (int i = 0; i < n_threads; i++)
+	{
+        threads_result[i].join();
+	}
 }
 
 void boxBlur(ppm &img, int start, int end)
@@ -203,74 +244,6 @@ void boxBlur(ppm &img, int start, int end)
 
 }
 
-
-void zoom(ppm &img_out, ppm &img, int n)
-{
-	//Recorro la foto original y saco los pixeles
-	for(int i = 0; i < img.height / n; i++)//columna
-	{
-		for(int j = 0; j < img.width / n; j++)//fila
-		{	
-			int r1 =img.getPixel(i,j).r;
-			int g1 =img.getPixel(i,j).g;
-			int b1 =img.getPixel(i,j).b;
-
-			//Recorro la nueva foto img_out y le aplico el zoom
-			for(int k = 0; k < n; k++)
-			{	
-				for(int h = 0; h < n; h++)
-				{				
-					img_out.setPixel(i * n + k, j * n + h, pixel(r1, g1, b1));
-				}
-
-			}
-		}		
-	}
-
-}
-
-void blackWhiteMultiThread(ppm& img, int n_threads)
-{
-
-	int rows_for_thread = (int)(img.height / n_threads);
-	vector<thread> threads_result;
-
-	for (int i = 0; i < n_threads; i++)
-	{
-		// Calculo el principio y el final
-		int start = i * rows_for_thread;
-		int end = (i + 1) * rows_for_thread;
-
-		threads_result.push_back(thread(blackWhite, ref(img), start, end));
-	}
-
-	for (int i = 0; i < n_threads; i++)
-	{
-        threads_result[i].join();
-	}
-}
-
-void contrastMultiThread(ppm& img, int n_threads)
-{
-
-	int rows_for_thread = (int)(img.height / n_threads);
-	vector<thread> threads_result;
-
-	for (int i = 0; i < n_threads; i++)
-	{
-		// Calculo el principio y el final
-		int start = i * rows_for_thread;
-		int end = (i + 1) * rows_for_thread;
-
-		threads_result.push_back(thread(contrast, ref(img), start, end));
-	}
-
-	for (int i = 0; i < n_threads; i++)
-	{
-        threads_result[i].join();
-	}
-}
-
 void boxBlurMultiThread(ppm& img, int n_threads)
 {
 
@@ -292,7 +265,31 @@ void boxBlurMultiThread(ppm& img, int n_threads)
 	}
 }
 
-void frameMultiThread(ppm& img, int n_threads)
+void frame(ppm& img, int x, int start, int end)
+{
+	int fAnteultimas = img.width - x;
+	int cAnteultimas = img.height - x;
+
+	for(int i = start; i < end; i++)//columna
+	{
+		for(int j = 0; j < img.width; j++)//fila
+		{	
+			if(j<=x || j >= fAnteultimas ) //agarra las primeras x filas y las ultimas x filas
+			{
+				img.setPixel(i,j,pixel(0,0,0));
+			}
+
+			if(i<=x || i >= cAnteultimas ) //agarra las primeras x columnas y las ultimas x columnas
+			{
+				img.setPixel(i,j,pixel(0,0,0));
+			}
+		}
+					
+			
+	}
+}
+
+void frameMultiThread(ppm& img, int n_threads, int x)
 {
 
 	int rows_for_thread = (int)(img.height / n_threads);
@@ -304,7 +301,7 @@ void frameMultiThread(ppm& img, int n_threads)
 		int start = i * rows_for_thread;
 		int end = (i + 1) * rows_for_thread;
 
-		threads_result.push_back(thread(frame, ref(img), start, end));
+		threads_result.push_back(thread(frame, ref(img), x, start, end));
 	}
 
 	for (int i = 0; i < n_threads; i++)
