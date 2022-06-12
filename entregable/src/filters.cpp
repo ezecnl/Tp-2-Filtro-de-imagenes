@@ -62,11 +62,7 @@ void merge(ppm& img1, ppm& img2, float p1)
 			img1.setPixel(i,j, pixel(rFinal,gFinal,bFinal));
 		}
 				
-					
-			
 				
-		
-					
 			
 	}
 
@@ -97,8 +93,7 @@ void zoom(ppm &img_out, ppm &img, int n)
 
 }
 
-
-void blackWhite(ppm& img, int start, int end)
+void blackWhite(ppm& img, unsigned int start, unsigned int end)
 {
 	
 	for(int i = start; i < end; i++)
@@ -140,7 +135,7 @@ void blackWhiteMultiThread(ppm& img, int n_threads)
 	}
 }
 
-void contrast(ppm& img, float contrast, int start, int end )
+void contrast(ppm& img, float contrast, unsigned int start, unsigned int end )
 {
 	
 	for(int i = start; i < end; i++)
@@ -183,7 +178,7 @@ void contrastMultiThread(ppm& img, int n_threads, float contrasts)
 	}
 }
 
-void boxBlur(ppm &img, int start, int end)
+void boxBlur(ppm &img, unsigned int start, unsigned int end)
 {
     double promedioRojo = 0, promedioVerde = 0, promedioAzul = 0;
     int contador = 0;
@@ -266,8 +261,7 @@ void boxBlurMultiThread(ppm& img, int n_threads)
 	}
 }
 
-
-void frame(ppm& img, int x, int start, int end)
+void frame(ppm& img, int x, unsigned int start, unsigned int end)
 {
 	int fAnteultimas = img.width - x;
 	int cAnteultimas = img.height - x;
