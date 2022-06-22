@@ -71,20 +71,23 @@ void merge(ppm& img1, ppm& img2, float p1)
 void zoom(ppm &img_out, ppm &img, int n)
 {
 	//Recorro la foto original y saco los pixeles
+	pixel pixelNuevo;
 	for(int i = 0; i < img.height / n; i++)//columna
 	{
 		for(int j = 0; j < img.width / n; j++)//fila
 		{	
-			int r1 =img.getPixel(i,j).r;
-			int g1 =img.getPixel(i,j).g;
-			int b1 =img.getPixel(i,j).b;
+			
+			pixelNuevo = img.getPixel(i, j);
 
+			int resultadoAltura = (j + (j * (n - 1)));
+			int resultadoAncho = (i + (i * (n - 1)));
+			
 			//Recorro la nueva foto img_out y le aplico el zoom
 			for(int k = 0; k < n; k++)
 			{	
 				for(int h = 0; h < n; h++)
 				{				
-					img_out.setPixel(i * n + k, j * n + h, pixel(r1, g1, b1));
+					img_out.setPixel(resultadoAncho + k, resultadoAltura + h, pixelNuevo);
 				}
 
 			}
