@@ -84,8 +84,8 @@ int main(int argc , char* argv[]){
 
 	else if (filter == "zoom")
 	{
-		ppm img_orig(img1);
-		zoom(img,img_orig,p1);
+		ppm img_orig(img.height * p1, img.width * p1);
+		zoom(img_orig,img,p1);
 	}
 		
 		

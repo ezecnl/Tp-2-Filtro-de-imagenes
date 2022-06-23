@@ -39,7 +39,7 @@ def run_filters(c, b, n, blur, bw, brillo, contraste):
 
     filters = filters[:-1]
     primerParametro = primerParametro[:-1]
-    cmd = 'c:\cygwin64\bin\mintty.exe Desktop/Tp-2-Filtro-de-imagenes/entregable/src/main' + ' "' + filters  +  '" ' +  threads +  ' "' + primerParametro +  '" ' + '../imgs/ashitaka.ppm ../out/salida.ppm' + " 0"
+    cmd = 'c:\cygwin64\bin\mintty.exe /cygdrive/c/Users/jorge/Desktop/Tp-2-Filtro-de-imagenes/entregable/src/main' + ' "' + filters  +  '" ' +  threads +  ' "' + primerParametro +  '" ' + '../imgs/ashitaka.ppm ../out/salida.ppm' + " 0"
     os.system(cmd)
    
 # Sidebar
