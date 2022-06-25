@@ -10,6 +10,9 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import pickle
 import os
+import pathlib
+
+
 import cv2
 from streamlit_drawable_canvas import st_canvas
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -39,7 +42,9 @@ def run_filters(c, b, n, blur, bw, brillo, contraste):
 
     filters = filters[:-1]
     primerParametro = primerParametro[:-1]
-    cmd = 'c:\cygwin64\bin\mintty.exe /cygdrive/c/Users/jorge/Desktop/Tp-2-Filtro-de-imagenes/entregable/src/main' + ' "' + filters  +  '" ' +  threads +  ' "' + primerParametro +  '" ' + '../imgs/ashitaka.ppm ../out/salida.ppm' + " 0"
+    ruta = str(pathlib.Path(".").resolve().parent).replace("\\", "/").replace("C:", "/cygdrive/c")
+    # ruta = "/cygdrive/c/Users/jorge/Desktop/Tp-2-Filtro-de-imagenes/entregable/src"
+    cmd = rf'''c:\cygwin64\bin\mintty.exe /usr/bin/bash -l -c 'cd {ruta}; ./main "{filters}"  {threads} "{primerParametro}" imgs/ashitaka.ppm out/salida.ppm 0' '''
     os.system(cmd)
    
 # Sidebar
