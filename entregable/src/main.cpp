@@ -71,7 +71,7 @@ int main(int argc , char* argv[]){
 	{
 		string img2(argv[6]);
 		ppm img3(img2);
-		merge(img,img3,p1);
+		merge(img,img3,p1);		
 	}
 
 	else if (filter == "boxBlur")
@@ -84,8 +84,8 @@ int main(int argc , char* argv[]){
 
 	else if (filter == "zoom")
 	{
-		ppm img_orig(img.height * p1, img.width * p1);
-		zoom(img_orig,img,p1);
+		ppm img_orig(img.width * p1, img.height * p1);
+		zoom(img,img_orig,p1);
 	}
 		
 		

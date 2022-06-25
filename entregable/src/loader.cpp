@@ -13,8 +13,8 @@ using namespace std;
 using namespace filesystem;
 
 
-
-void imagenesmuchas(path directorio_salida, string filter ,int p1, vector<path> imagenes )
+//No aplicamos el filtro zoom Digital y el Merge
+void aplicarFfiltros(path directorio_salida, string filter ,int p1, vector<path> imagenes )
 {
 	for (path img_path : imagenes) 
 	{
@@ -42,11 +42,6 @@ void imagenesmuchas(path directorio_salida, string filter ,int p1, vector<path> 
 		{
 			boxBlur(img, 0, img.height);
 		}
-		else if (filter == "zoom")
-		{
-			ppm img_orig(img_path);
-			zoom(img,img_orig,p1);
-		}	
 
 		
 		path out_path = directorio_salida; 
@@ -123,7 +118,7 @@ int main(int argc , char* argv[])
 	thread threads[n_readers];
     for (int i = 0; i < n_readers; i++)
 	{
-		threads[i] = thread(imagenesmuchas,out_dir,filters,p1, threads_images[i]);
+		threads[i] = thread(aplicarFfiltros,out_dir,filters,p1, threads_images[i]);
 	} 
     for (int i = 0; i < n_readers; i++)
 	{

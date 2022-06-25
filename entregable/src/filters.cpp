@@ -36,7 +36,6 @@ void merge(ppm& img1, ppm& img2, float p1)
 {
 	//Asumimos que las imagenes deben ser del mismo tamaño.
 	float p2 = 1 - p1;
-
 	for(int i = 0; i < img1.height; i++)//columna
 	{
 		for(int j = 0; j < img1.width; j++)//fila
@@ -60,18 +59,16 @@ void merge(ppm& img1, ppm& img2, float p1)
 			truncate(bFinal);
 			
 			img1.setPixel(i,j, pixel(rFinal,gFinal,bFinal));
-		}
-				
-				
+		}	
 			
 	}
-
 }
 
 void zoom(ppm &img, ppm &img_out, int n)
 {
 	//Recorro la foto original y saco los pixeles
 	pixel pixelNuevo;
+	cout<<"hola"<<endl;
 	for(int i = 0; i < img.height; i++)//columna
 	{
 		for(int j = 0; j < img.width; j++)//fila
